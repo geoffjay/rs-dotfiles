@@ -1,0 +1,22 @@
+name: rs-dotfiles
+version: "0.1.0"
+author: Geoff Johnson <geoff.jay@gmail.com>
+about: Dotfiles Service
+args:
+  - config:
+      short: c
+      long: config
+      value_name: FILE
+      help: Sets a config file
+      takes_value: true
+  - verbose:
+      short: v
+      multiple: true
+      help: Sets the level of verbosity
+subcommands:
+  - start:
+      about: Start a dotfiles service running
+      version: "0.1.0"
+  - stop:
+      about: Stops a running dotfiles service
+      version: "0.1.0"

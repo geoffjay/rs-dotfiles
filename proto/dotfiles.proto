@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package dotfiles;
+
+service Dotfiles {
+  rpc list(ListRequest) returns (ListReply) {}
+  rpc list_all(Empty) returns (ListReply) {}
+
+  rpc create(Profile) returns (Profile) {}
+  rpc read(Profile) returns (Profile) {}
+  rpc update(Profile) returns (Profile) {}
+  rpc delete(Profile) returns (Empty) {}
+}
+
+//
+// Generic structures
+//
+
+message Empty {}
+
+message ProfileProperties {
+  bool bash = 1;
+  bool config = 2;
+  bool vim = 3;
+}
+
+// Create: name:required, properties:optional
+// Read:   name:required
+// Update: name:required, properties:optional
+// Delete: name:required
+message Profile {
+  string name = 1;
+  ProfileProperties properties = 2;
+}
+
+//
+// Request / Reply envelopes
+//
+
+message ListRequest {
+  string name = 1;
+}
+
+message ListReply {
+  Profile profiles = 1;
+}
+
+//message CreateRequest {
+//}
+
+//message CreateReply {
+//}
+
+//message UpdateRequest {
+//}
+
+//message UpdateReply {
+//}
+
+//message DeleteReply {
+//}
+
+//message DeleteRequest {
+//}

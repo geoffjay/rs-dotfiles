@@ -1,0 +1,8 @@
+*.*~
+*.swp
+**/*.rs.bk
+
+target/
+
+src/dotfiles.rs
+src/dotfiles_grpc.rs
