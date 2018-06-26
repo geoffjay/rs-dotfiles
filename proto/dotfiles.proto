@@ -3,13 +3,18 @@ syntax = "proto3";
 package dotfiles;
 
 service Dotfiles {
-  rpc list(ListRequest) returns (ListReply) {}
-  rpc list_all(Empty) returns (ListReply) {}
+  rpc profile_install(ProfileInstallRequest) returns (Profile) {}
+  rpc profile_list(ProfileListRequest) returns (ProfileListReply) {}
+  rpc profile_list_all(Empty) returns (ProfileListReply) {}
+  rpc profile_revert(Empty) returns (Profile) {}
+  rpc profile_update(Empty) returns (Profile) {}
 
-  rpc create(Profile) returns (Profile) {}
-  rpc read(Profile) returns (Profile) {}
-  rpc update(Profile) returns (Profile) {}
-  rpc delete(Profile) returns (Empty) {}
+  rpc repo_add(RepoAddRequest) returns (Repo) {}
+  rpc repo_list(RepoListRequest) returns (RepoListReply) {}
+  rpc repo_list_all(Empty) returns (RepoListReply) {}
+  rpc repo_remove(RepoRemoveRequest) returns (Repo) {}
+  rpc repo_scan(RepoScanRequest) returns (Repo) {}
+  rpc repo_update(RepoUpdateRequest) returns (Repo) {}
 }
 
 //
@@ -21,44 +26,58 @@ message Empty {}
 message ProfileProperties {
   bool bash = 1;
   bool config = 2;
-  bool vim = 3;
+  bool input = 3;
+  bool vim = 4;
 }
 
-// Create: name:required, properties:optional
-// Read:   name:required
-// Update: name:required, properties:optional
-// Delete: name:required
 message Profile {
   string name = 1;
   ProfileProperties properties = 2;
+}
+
+message Repo {
+  string name = 1;
+  string url = 2;
 }
 
 //
 // Request / Reply envelopes
 //
 
-message ListRequest {
+message ProfileInstallRequest {
   string name = 1;
 }
 
-message ListReply {
+message ProfileListRequest {
+  string name = 1;
+}
+
+message ProfileListReply {
   Profile profiles = 1;
 }
 
-//message CreateRequest {
-//}
+message RepoAddRequest {
+  string name = 1;
+  string url = 2;
+}
 
-//message CreateReply {
-//}
+message RepoListRequest {
+  string name = 1;
+}
 
-//message UpdateRequest {
-//}
+message RepoListReply {
+  Repo repos = 1;
+}
 
-//message UpdateReply {
-//}
+message RepoRemoveRequest {
+  string name = 1;
+}
 
-//message DeleteReply {
-//}
+message RepoScanRequest {
+  string name = 1;
+}
 
-//message DeleteRequest {
-//}
+message RepoUpdateRequest {
+  string name = 1;
+  string url = 2;
+}

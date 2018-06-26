@@ -16,7 +16,5 @@ args:
 subcommands:
   - start:
       about: Start a dotfiles service running
-      version: "0.1.0"
   - stop:
       about: Stops a running dotfiles service
-      version: "0.1.0"

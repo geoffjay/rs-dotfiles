@@ -1,0 +1,76 @@
+name: dots-cli
+version: "0.1.0"
+author: Geoff Johnson <geoff.jay@gmail.com>
+about: Dotfiles commandline application
+args:
+  - config:
+      help: Sets a config file
+      short: c
+      long: config
+      value_name: FILE
+      takes_value: true
+  - verbose:
+      help: Sets the level of verbosity
+      short: v
+      multiple: true
+subcommands:
+  - completions:
+      about: Generate shell completions
+      args:
+        - shell:
+            help: Generate
+            short: s
+            long: shell
+            possible_values: [ bash, fish, powershell, zsh ]
+            takes_value: true
+  - profile:
+      about: Dotfiles profile commands
+      subcommands:
+        - install:
+            about: Install a profile for a user
+            args:
+              - name:
+                  help: Name
+                  short: n
+                  long: name
+                  takes_value: true
+        - revert:
+            about: Revert to the previous user installed profile
+        - update:
+            about: Update the installed profile
+        - list:
+            about: List all profiles
+  - repo:
+      about: Dotfiles repository commands
+      subcommands:
+        - add:
+            about: Add a repository
+            args:
+              - name:
+                  help: Name
+                  short: n
+                  long: name
+                  takes_value: true
+              - url:
+                  help: URL
+                  short: u
+                  long: url
+                  takes_value: true
+        - remove:
+            about: Remove a repository
+            args:
+              - name:
+                  help: Name
+                  short: n
+                  long: name
+                  takes_value: true
+        - scan:
+            about: Scan a repository
+            args:
+              - name:
+                  help: Name
+                  short: n
+                  long: name
+                  takes_value: true
+        - list:
+            about: List all repositories
