@@ -56,7 +56,7 @@ fn main() -> Result<()> {
         ("repo", Some(c)) => match c.subcommand() {
             ("add", Some(m)) => repo_add(m)?,
             ("list", Some(_)) => repo_list(),
-            ("remove", Some(_)) => repo_remove(),
+            ("remove", Some(m)) => repo_remove(m)?,
             ("scan", Some(_)) => repo_scan(),
             ("update", Some(_)) => repo_update(),
             (_, _) => unreachable!(),

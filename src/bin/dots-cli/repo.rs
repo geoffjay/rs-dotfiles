@@ -31,8 +31,21 @@ pub fn repo_list() {
     debug!("repo::list");
 }
 
-pub fn repo_remove() {
+pub fn repo_remove(m: &ArgMatches) -> Result<()> {
     debug!("repo::remove");
+    let client = dots_connect();
+
+    let ref name = m.value_of("name").expect("");
+
+    let mut req = RepoRemoveRequest::new();
+    req.set_name(name.to_string());
+
+    let resp = client.repo_remove(grpc::RequestOptions::new(), req);
+
+    info!("{:?}", resp.wait());
+    debug!("remove {}", name);
+
+    Ok(())
 }
 
 pub fn repo_scan() {

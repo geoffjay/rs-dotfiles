@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate clap;
-use clap::App;
+
+extern crate diesel;
 
 #[macro_use]
 extern crate log;
@@ -13,6 +14,8 @@ extern crate grpc;
 extern crate protobuf;
 extern crate rs_dots;
 
+use clap::App;
+use diesel::prelude::*;
 use std::thread;
 
 use self::rs_dots::*;
@@ -217,12 +220,20 @@ impl Dots for DotsServiceImpl {
         _m: grpc::RequestOptions,
         _req: RepoRemoveRequest,
     ) -> grpc::SingleResponse<Repo> {
+        use rs_dots::schema::repos::dsl::*;
+
         let mut r = Repo::new();
 
-        info!("received request to remove a repository");
-        // FIXME: used during development
-        r.set_name("test".to_owned());
-        r.set_url("http://test.git/test".to_owned());
+        let _name = _req.get_name().to_string();
+        info!("Received request to remove repository {}", _name);
+
+        let pattern = format!("%{}%", _name);
+        let conn = db_connect();
+        let num_deleted = diesel::delete(repos.filter(name.like(pattern)))
+            .execute(&conn)
+            .expect("Error deleting repo");
+
+        r.set_name(_name);
 
         grpc::SingleResponse::completed(r)
     }

@@ -2,6 +2,8 @@
 *.swp
 **/*.rs.bk
 
+*.db
+
 target/
 
 src/dots.rs
