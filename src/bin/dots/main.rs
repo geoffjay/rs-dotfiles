@@ -11,14 +11,15 @@ extern crate futures_cpupool;
 
 extern crate grpc;
 extern crate protobuf;
-extern crate rs_dotfiles;
+extern crate rs_dots;
 
 use std::thread;
 
-use rs_dotfiles::dotfiles_grpc::*;
-use rs_dotfiles::dotfiles::*;
+use self::rs_dots::*;
+use self::rs_dots::dots::*;
+use self::rs_dots::dots_grpc::*;
 
-struct DotfilesServiceImpl;
+struct DotsServiceImpl;
 
 pub fn main() {
     env_logger::init();
@@ -31,6 +32,11 @@ pub fn main() {
     let config = matches.value_of("config").unwrap_or("default.conf");
     debug!("value for config: {}", config);
 
+    // TODO: Count occurences? and set logging output
+    if verbose {
+        debug!("verbose output enabled");
+    }
+
     match matches.subcommand() {
         ("start", Some(_)) => start(),
         ("stop", Some(_)) => stop(),
@@ -40,16 +46,16 @@ pub fn main() {
     //// TODO: Implement stop
     //if let Some(matches) = matches.subcommand_matches("stop") {
         //// Get PID file for running service
-        //info!("stopping dotfiles service...");
+        //info!("stopping dots service...");
         //return;
     //}
 
     //if let Some(matches) = matches.subcommand_matches("start") {
-        //info!("starting dotfiles service...");
+        //info!("starting dots service...");
 
         //let mut server = grpc::ServerBuilder::new_plain();
         //server.http.set_port(10000);
-        //server.add_service(DotfilesServer::new_service_def(DotfilesServiceImpl));
+        //server.add_service(DotsServer::new_service_def(DotsServiceImpl));
         //server.http.set_cpu_pool_threads(4);
         //let _server = server.build().expect("server");
 
@@ -60,11 +66,11 @@ pub fn main() {
 }
 
 fn start() {
-    info!("starting dotfiles service...");
+    info!("starting dots service...");
 
     let mut server = grpc::ServerBuilder::new_plain();
     server.http.set_port(10000);
-    server.add_service(DotfilesServer::new_service_def(DotfilesServiceImpl));
+    server.add_service(DotsServer::new_service_def(DotsServiceImpl));
     server.http.set_cpu_pool_threads(4);
     let _server = server.build().expect("server");
 
@@ -74,11 +80,11 @@ fn start() {
 }
 
 fn stop() {
-    info!("stopping dotfiles service...");
+    info!("stopping dots service...");
     return;
 }
 
-impl Dotfiles for DotfilesServiceImpl {
+impl Dots for DotsServiceImpl {
     fn profile_install(
         &self,
         _m: grpc::RequestOptions,
@@ -87,6 +93,8 @@ impl Dotfiles for DotfilesServiceImpl {
         let mut r = Profile::new();
 
         info!("received request to install profile");
+        // FIXME: used during development
+        r.set_name("test".to_owned());
 
         grpc::SingleResponse::completed(r)
     }
@@ -139,6 +147,8 @@ impl Dotfiles for DotfilesServiceImpl {
         let mut r = Profile::new();
 
         info!("received request to read profile");
+        // FIXME: used during development
+        r.set_name("test".to_owned());
 
         grpc::SingleResponse::completed(r)
     }
@@ -151,6 +161,8 @@ impl Dotfiles for DotfilesServiceImpl {
         let mut r = Profile::new();
 
         info!("received request to update profile");
+        // FIXME: used during development
+        r.set_name("test".to_owned());
 
         grpc::SingleResponse::completed(r)
     }
@@ -162,7 +174,16 @@ impl Dotfiles for DotfilesServiceImpl {
     ) -> grpc::SingleResponse<Repo> {
         let mut r = Repo::new();
 
-        info!("received request to add repository");
+        // TODO: Figure out how to have a shared connection
+        let conn = db_connect();
+
+        let name = _req.get_name().to_string();
+        let url = _req.get_url().to_string();
+        info!("Received request to add repository {} at {}", name, url);
+
+        let _ = create_repo(&conn, &name, &url);
+        r.set_name(name);
+        r.set_url(url);
 
         grpc::SingleResponse::completed(r)
     }
@@ -199,6 +220,9 @@ impl Dotfiles for DotfilesServiceImpl {
         let mut r = Repo::new();
 
         info!("received request to remove a repository");
+        // FIXME: used during development
+        r.set_name("test".to_owned());
+        r.set_url("http://test.git/test".to_owned());
 
         grpc::SingleResponse::completed(r)
     }
@@ -211,6 +235,9 @@ impl Dotfiles for DotfilesServiceImpl {
         let mut r = Repo::new();
 
         info!("received request to scan a repository");
+        // FIXME: used during development
+        r.set_name("test".to_owned());
+        r.set_url("http://test.git/test".to_owned());
 
         grpc::SingleResponse::completed(r)
     }
@@ -223,6 +250,9 @@ impl Dotfiles for DotfilesServiceImpl {
         let mut r = Repo::new();
 
         info!("received request to update a repository");
+        // FIXME: used during development
+        r.set_name("test".to_owned());
+        r.set_url("http://test.git/test".to_owned());
 
         grpc::SingleResponse::completed(r)
     }

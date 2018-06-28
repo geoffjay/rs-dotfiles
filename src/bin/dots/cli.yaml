@@ -1,7 +1,7 @@
-name: rs-dotfiles
+name: rs-dots
 version: "0.1.0"
 author: Geoff Johnson <geoff.jay@gmail.com>
-about: Dotfiles Service
+about: Dots Service
 args:
   - config:
       short: c
@@ -15,6 +15,6 @@ args:
       help: Sets the level of verbosity
 subcommands:
   - start:
-      about: Start a dotfiles service running
+      about: Start a dots service running
   - stop:
-      about: Stops a running dotfiles service
+      about: Stops a running dots service

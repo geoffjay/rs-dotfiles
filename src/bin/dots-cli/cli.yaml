@@ -1,7 +1,7 @@
 name: dots-cli
 version: "0.1.0"
 author: Geoff Johnson <geoff.jay@gmail.com>
-about: Dotfiles commandline application
+about: Dots commandline application
 args:
   - config:
       help: Sets a config file
@@ -24,7 +24,7 @@ subcommands:
             possible_values: [ bash, fish, powershell, zsh ]
             takes_value: true
   - profile:
-      about: Dotfiles profile commands
+      about: Dots profile commands
       subcommands:
         - install:
             about: Install a profile for a user
@@ -41,7 +41,7 @@ subcommands:
         - list:
             about: List all profiles
   - repo:
-      about: Dotfiles repository commands
+      about: Dots repository commands
       subcommands:
         - add:
             about: Add a repository

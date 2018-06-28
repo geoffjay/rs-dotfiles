@@ -1,21 +1,30 @@
-use rs_dotfiles::dotfiles_grpc::*;
-use rs_dotfiles::dotfiles::*;
+extern crate rs_dots;
 
-//use client::*;
+use self::rs_dots::*;
+use self::rs_dots::dots::*;
+use self::rs_dots::dots_grpc::*;
 
-pub fn repo_add() {
+use clap::ArgMatches;
+use grpc;
+use std::io::*;
+
+pub fn repo_add(m: &ArgMatches) -> Result<()> {
     debug!("repo::add");
-    let client_conf = Default::default();
-    let client = DotfilesClient::new_plain("::1", 10000, client_conf).unwrap();
-    //let client = connect();
+    let client = dots_connect();
+
+    let ref name = m.value_of("name").expect("");
+    let ref url = m.value_of("url").expect("");
 
     let mut req = RepoAddRequest::new();
-    req.set_name("bork".to_owned());
-    req.set_url("https://github.com/geoffjay/bork".to_owned());
+    req.set_name(name.to_string());
+    req.set_url(url.to_string());
 
     let resp = client.repo_add(grpc::RequestOptions::new(), req);
 
     info!("{:?}", resp.wait());
+    debug!("add {}: {}", name, url);
+
+    Ok(())
 }
 
 pub fn repo_list() {

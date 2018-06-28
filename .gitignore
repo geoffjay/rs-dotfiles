@@ -4,5 +4,5 @@
 
 target/
 
-src/dotfiles.rs
-src/dotfiles_grpc.rs
+src/dots.rs
+src/dots_grpc.rs

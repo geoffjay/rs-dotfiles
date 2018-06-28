@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package dotfiles;
+package dots;
 
-service Dotfiles {
+service Dots {
   rpc profile_install(ProfileInstallRequest) returns (Profile) {}
   rpc profile_list(ProfileListRequest) returns (ProfileListReply) {}
   rpc profile_list_all(Empty) returns (ProfileListReply) {}

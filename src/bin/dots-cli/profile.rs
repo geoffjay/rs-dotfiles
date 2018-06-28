@@ -1,8 +1,8 @@
-use client::*;
+//use client::*;
 
 pub fn profile_install() {
     debug!("profile::install");
-    let client = connect();
+    //let client = connect();
 }
 
 pub fn profile_list() {
