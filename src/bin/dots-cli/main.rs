@@ -16,7 +16,7 @@ extern crate clap;
 
 extern crate grpc;
 extern crate protobuf;
-extern crate rs_dots;
+extern crate dots;
 
 mod profile;
 mod repo;
@@ -55,7 +55,7 @@ fn main() -> Result<()> {
         },
         ("repo", Some(c)) => match c.subcommand() {
             ("add", Some(m)) => repo_add(m)?,
-            ("list", Some(_)) => repo_list(),
+            ("list", Some(_)) => repo_list()?,
             ("remove", Some(m)) => repo_remove(m)?,
             ("scan", Some(_)) => repo_scan(),
             ("update", Some(_)) => repo_update(),

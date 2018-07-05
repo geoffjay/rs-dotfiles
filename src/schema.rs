@@ -5,3 +5,11 @@ table! {
         url -> Text,
     }
 }
+
+table! {
+    profiles (id) {
+        id -> Integer,
+        repo_id -> Integer,
+        name -> Text,
+    }
+}

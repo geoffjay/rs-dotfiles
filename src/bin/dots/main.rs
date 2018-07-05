@@ -1,26 +1,22 @@
-#[macro_use]
-extern crate clap;
+#[macro_use] extern crate clap;
+#[macro_use] extern crate diesel;
+#[macro_use] extern crate log;
 
-extern crate diesel;
-
-#[macro_use]
-extern crate log;
 extern crate env_logger;
-
 extern crate futures;
 extern crate futures_cpupool;
-
 extern crate grpc;
 extern crate protobuf;
-extern crate rs_dots;
+
+extern crate dots;
 
 use clap::App;
 use diesel::prelude::*;
 use std::thread;
 
-use self::rs_dots::*;
-use self::rs_dots::dots::*;
-use self::rs_dots::dots_grpc::*;
+use self::dots::*;
+use self::dots::dots::*;
+use self::dots::dots_grpc::*;
 
 struct DotsServiceImpl;
 
@@ -178,13 +174,13 @@ impl Dots for DotsServiceImpl {
         let mut r = Repo::new();
 
         // TODO: Figure out how to have a shared connection
-        let conn = db_connect();
+        //let conn = db_connect();
 
         let name = _req.get_name().to_string();
         let url = _req.get_url().to_string();
         info!("Received request to add repository {} at {}", name, url);
 
-        let _ = create_repo(&conn, &name, &url);
+        let _ = models::Repo::create(&name, &url);
         r.set_name(name);
         r.set_url(url);
 
@@ -198,7 +194,18 @@ impl Dots for DotsServiceImpl {
     ) -> grpc::SingleResponse<RepoListReply> {
         let mut r = RepoListReply::new();
 
+        //let conn = db_connect();
+        //let _name = _req.get_name().to_string();
+        //let results = repos
+            //.filter(name.eq(_name))
+            //.load::<Repo>(&conn)
+            //.expect("Error loading repositories");
+
         info!("received request to read a repository");
+        // FIXME: No need to iterate here, being lazy
+        //for repo in results {
+            //println!("{}: {}", repo.name, repo.url);
+        //}
 
         grpc::SingleResponse::completed(r)
     }
@@ -208,9 +215,21 @@ impl Dots for DotsServiceImpl {
         _m: grpc::RequestOptions,
         _req: Empty,
     ) -> grpc::SingleResponse<RepoListReply> {
+        //use dots::schema::repos::dsl::*;
+
         let mut r = RepoListReply::new();
 
-        info!("received request to read all repositories");
+        //let conn = db_connect();
+        //let results = repos
+            //.load::<Repo>(&conn)
+            //.expect("Error loading repositories");
+
+        let results = *models::Repo::all();
+
+        info!("Received request to read all repositories");
+        for repo in results {
+            println!("{}: {}", repo.name, repo.url);
+        }
 
         grpc::SingleResponse::completed(r)
     }
@@ -220,18 +239,18 @@ impl Dots for DotsServiceImpl {
         _m: grpc::RequestOptions,
         _req: RepoRemoveRequest,
     ) -> grpc::SingleResponse<Repo> {
-        use rs_dots::schema::repos::dsl::*;
+        use dots::schema::repos::dsl::*;
 
         let mut r = Repo::new();
 
         let _name = _req.get_name().to_string();
         info!("Received request to remove repository {}", _name);
 
-        let pattern = format!("%{}%", _name);
-        let conn = db_connect();
-        let num_deleted = diesel::delete(repos.filter(name.like(pattern)))
-            .execute(&conn)
-            .expect("Error deleting repo");
+        //let pattern = format!("%{}%", _name);
+        //let conn = db_connect();
+        //let num_deleted = diesel::delete(repos.filter(name.like(pattern)))
+            //.execute(&conn)
+            //.expect("Error deleting repo");
 
         r.set_name(_name);
 

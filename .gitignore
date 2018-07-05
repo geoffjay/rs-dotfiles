@@ -2,7 +2,8 @@
 *.swp
 **/*.rs.bk
 
-*.db
+.env
+dots.db
 
 target/
 

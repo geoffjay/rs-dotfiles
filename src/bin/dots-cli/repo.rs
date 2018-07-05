@@ -1,8 +1,8 @@
-extern crate rs_dots;
+extern crate dots;
 
-use self::rs_dots::*;
-use self::rs_dots::dots::*;
-use self::rs_dots::dots_grpc::*;
+use self::dots::*;
+use self::dots::dots::*;
+use self::dots::dots_grpc::*;
 
 use clap::ArgMatches;
 use grpc;
@@ -27,8 +27,16 @@ pub fn repo_add(m: &ArgMatches) -> Result<()> {
     Ok(())
 }
 
-pub fn repo_list() {
+pub fn repo_list() -> Result<()> {
     debug!("repo::list");
+
+    let client = dots_connect();
+    let req = dots::dots::Empty::new();
+    let resp = client.repo_list_all(grpc::RequestOptions::new(), req);
+
+    info!("{:?}", resp.wait());
+
+    Ok(())
 }
 
 pub fn repo_remove(m: &ArgMatches) -> Result<()> {
